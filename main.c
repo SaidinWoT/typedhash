@@ -19,17 +19,13 @@ int main(int argc, char **argv) {
         switch(opt) {
             case 'i':
                 getkeyval(key, val);
-                switch(val[0]) {
-                    case '\0':
-                        hset(t, key, NULL, NIL, sizeof(void *));
-                        break;
-                    case '"':
-                        hset(t, key, val, STRING, sizeof(char) * strlen(val));
-                        break;
-                    default:
-                        *tmp = atoi(val);
-                        hset(t, key, tmp, INTEGER, sizeof(int));
-                        break;
+                if(val[0] == '\0') {
+                    hset(t, key, NULL, NIL, sizeof(void *));
+                } else if(val[0] >= '0' && val[0] <= '9') {
+                    *tmp = atoi(val);
+                    hset(t, key, tmp, INTEGER, sizeof(int));
+                } else {
+                    hset(t, key, val, STRING, sizeof(char) * strlen(val));
                 }
                 display(t);
                 break;
